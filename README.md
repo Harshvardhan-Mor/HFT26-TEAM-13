@@ -97,7 +97,7 @@ All formulas live in [`src/lib/habitability.js`](src/lib/habitability.js) and ar
 - **Habitable zone:** Kopparapu et al. (2014), *ApJL* 787, L29. Stellar flux limits `Seff = SeffSun + aT + bT² + cT³ + dT⁴` with `T = Teff − 5780 K`. Conservative zone = runaway greenhouse to maximum greenhouse; optimistic = recent Venus to early Mars. Valid for star temperatures 2600–7200 K (the app flags stars outside that range).
 - **Earth Similarity Index:** the simplified form used by the [Planetary Habitability Laboratory](https://phl.upr.edu/projects/earth-similarity-index-esi): `ESI = 1 − √(½[((S−1)/(S+1))² + ((R−1)/(R+1))²])`, from Schulze-Makuch et al. (2011), *Astrobiology* 11, 1041.
 - **Habitable-planet sample:** follows the [PHL Habitable Worlds Catalog](https://phl.upr.edu/hwc) criteria: conservative 0.5 < R ≤ 1.6 R⊕ (or 0.1 < M ≤ 3 M⊕); optimistic R ≤ 2.5 R⊕ (or M ≤ 10 M⊕), inside the optimistic habitable zone.
-- **Estimates for missing data:** radius ≈ M^(1/3) (PHL's method), semi-major axis from Kepler's third law, insolation = L/a², equilibrium temperature = 278.6 K × S^¼ (zero albedo). Estimated values are always labelled.
+- **Estimates for missing data:** radius from mass via the Chen & Kipping (2017, *ApJ* 834, 17) mass-radius relation, semi-major axis from Kepler's third law, insolation = L/a², equilibrium temperature = 278.6 K × S^¼ (zero albedo). Estimated values are always labelled.
 
 > These are indicators for comparison, not claims that a planet is habitable or has life.
 

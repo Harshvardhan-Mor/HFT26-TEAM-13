@@ -1,13 +1,16 @@
 // A text label drawn inside the 3D scene (canvas texture on a sprite).
 // Stays the same size on screen and needs no DOM nodes or web fonts,
 // which avoids React-DOM overlay bugs and works offline.
-import { useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
+
+/** Global label size multiplier (bigger in presenter mode). */
+export const LabelScale = createContext(1);
 
 export default function Label({ text, position = [0, 0, 0], color = '#cfd7ea', border = null, scale = 1 }) {
   const { texture, aspect } = useMemo(() => {
     const lines = String(text).split('\n');
-    const font = 'bold 40px system-ui, sans-serif';
+    const font = '600 40px "Space Grotesk", system-ui, sans-serif';
     const c = document.createElement('canvas');
     const ctx = c.getContext('2d');
     ctx.font = font;
@@ -27,7 +30,8 @@ export default function Label({ text, position = [0, 0, 0], color = '#cfd7ea', b
 
   useEffect(() => () => texture.dispose(), [texture]);
 
-  const hgt = 0.045 * scale * (texture.image.height / 66);
+  const global = useContext(LabelScale);
+  const hgt = 0.045 * scale * global * (texture.image.height / 66);
   return (
     <sprite position={position} scale={[hgt * aspect, hgt, 1]} renderOrder={10}>
       <spriteMaterial map={texture} sizeAttenuation={false} depthTest={false} transparent />

@@ -12,18 +12,6 @@ export function starColor(teff) {
   return stops[0][1];
 }
 
-/** Planet color by type and temperature (artistic, not observed). */
-export function planetColor(p) {
-  const R = p.hab?.radius?.value ?? 1;
-  const T = p.hab?.eqTemp?.value ?? 250;
-  if (R > 6) return T > 1000 ? '#e0874f' : '#d9b98a';      // gas giants
-  if (R > 2.5) return T > 600 ? '#7fa7c9' : '#6fb7d6';     // Neptune-like
-  if (T > 700) return '#c2593a';                            // lava world
-  if (T > 320) return '#c79a6b';                            // hot rocky
-  if (T > 180) return '#5aa3a0';                            // temperate
-  return '#b9d3e8';                                         // icy
-}
-
 export const zoneColors = {
   conservative: '#3ddc97', optimistic: '#c6e86b', hot: '#ff7a59', cold: '#7fb2ff', unknown: '#8a93a6',
 };

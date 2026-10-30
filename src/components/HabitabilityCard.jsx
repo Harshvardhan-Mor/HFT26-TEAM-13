@@ -63,7 +63,7 @@ export default function HabitabilityCard({ planet }) {
         <ul>
           <li><b>ESI</b> = 1 − √(½[((S−1)/(S+1))² + ((R−1)/(R+1))²]), with S = starlight and R = radius in Earth units (Planetary Habitability Laboratory).</li>
           <li><b>Habitable zone</b> limits use the Kopparapu et al. (2014) polynomial in star temperature, compared against the planet’s insolation.</li>
-          <li><b>Missing values</b>: radius ≈ mass^(1/3); insolation = L/a²; temperature = 278.6 K × S^¼ (zero albedo). These are marked “estimated”.</li>
+          <li><b>Missing values</b>: radius from mass via Chen &amp; Kipping (2017); insolation = L/a²; temperature = 278.6 K × S^¼ (zero albedo). These are marked “estimated”.</li>
         </ul>
       </details>
       <p className="caveat">{h.caveat}</p>

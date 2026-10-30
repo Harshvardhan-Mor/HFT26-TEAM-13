@@ -6,6 +6,8 @@ import { OrbitControls, Stars } from '@react-three/drei';
 import Label from './Label.jsx';
 import * as THREE from 'three';
 import { skyPosition, starColor } from '../lib/visual.js';
+import { StarGlow } from './PlanetBody.jsx';
+import CameraFlyIn from './CameraFlyIn.jsx';
 
 // Soft round dot texture so stars aren't drawn as squares.
 function makeDot() {
@@ -65,7 +67,8 @@ function StarField({ systems, selected, onSelect, habitableOnly }) {
       <mesh>
         <sphereGeometry args={[0.35, 16, 16]} />
         <meshBasicMaterial color="#ffd36b" />
-        <Label text="Sun" position={[0, 0.9, 0]} color="#ffd36b" />
+        <StarGlow color="#ffd36b" size={4} />
+        <Label text="Sun · you are here" position={[0, 1.1, 0]} color="#ffd36b" />
       </mesh>
 
       {hov && (
@@ -97,7 +100,8 @@ export default function GalaxyView(props) {
       <Stars radius={200} depth={60} count={4000} factor={3} fade />
       <gridHelper args={[80, 16, '#1b2540', '#111a2e']} />
       <StarField {...props} />
-      <OrbitControls enableDamping makeDefault />
+      <OrbitControls enableDamping makeDefault autoRotate autoRotateSpeed={0.25} maxDistance={160} />
+      <CameraFlyIn trigger="galaxy" from={[0, 90, 150]} to={[0, 25, 55]} duration={2.4} />
     </Canvas>
   );
 }

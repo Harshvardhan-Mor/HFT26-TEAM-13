@@ -68,10 +68,27 @@ export function insolation(p) {
   return { value: null, estimated: true };
 }
 
-/** Radius in Earth radii; PHL's fallback for mass-only planets is R = M^(1/3). */
+/**
+ * Radius (Earth radii) from mass (Earth masses) using the probabilistic mass-radius
+ * relation of Chen & Kipping (2017), ApJ 834:17, Table 1 (mean relation, continuous):
+ *   Terran     M < 2.04 M⊕        R = 1.008 · M^0.279
+ *   Neptunian  2.04 M⊕ – 0.414 MJ R ∝ M^0.589
+ *   Jovian     > 0.414 MJ         R ∝ M^-0.044
+ * Real planets scatter widely around this, so results are always flagged "estimated".
+ */
+const MJ_IN_ME = 317.83;
+const T1 = 2.04, T2 = 0.414 * MJ_IN_ME;
+const R_T1 = 1.008 * T1 ** 0.279;
+const R_T2 = R_T1 * (T2 / T1) ** 0.589;
+export function radiusFromMass(m) {
+  if (m < T1) return 1.008 * m ** 0.279;
+  if (m < T2) return R_T1 * (m / T1) ** 0.589;
+  return R_T2 * (m / T2) ** -0.044;
+}
+
 export function planetRadius(p) {
   if (p.pl_rade != null) return { value: p.pl_rade, estimated: false };
-  if (p.pl_bmasse != null) return { value: Math.cbrt(p.pl_bmasse), estimated: true };
+  if (p.pl_bmasse != null) return { value: radiusFromMass(p.pl_bmasse), estimated: true };
   return { value: null, estimated: true };
 }
 

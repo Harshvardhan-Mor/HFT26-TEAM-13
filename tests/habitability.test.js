@@ -2,7 +2,7 @@
 // Sanity checks: Earth-like inputs must give Earth-like results.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { seff, earthSimilarity, zoneStatus, habitableZone, phlSample } from '../src/lib/habitability.js';
+import { seff, earthSimilarity, zoneStatus, habitableZone, phlSample, radiusFromMass } from '../src/lib/habitability.js';
 
 const earthLike = {
   pl_rade: 1, pl_insol: 1, pl_orbsmax: 1, pl_orbper: 365.25,
@@ -37,4 +37,14 @@ test('A hot Jupiter is classed as too hot with low ESI', () => {
 
 test('Missing star data gives unknown, not a crash', () => {
   assert.equal(zoneStatus({ pl_rade: 1 }).key, 'unknown');
+});
+
+test('Chen & Kipping 2017 mass-radius: Earth ~1, Neptune-ish ~4, Jupiter-mass ~12-15', () => {
+  assert.ok(Math.abs(radiusFromMass(1) - 1.008) < 1e-9);
+  const neptune = radiusFromMass(17.15);            // Neptune: 17.15 M⊕, real radius 3.88 R⊕
+  assert.ok(neptune > 3 && neptune < 5, `neptune ${neptune}`);
+  const jupiter = radiusFromMass(317.83);           // Jupiter: real radius 11.2 R⊕
+  assert.ok(jupiter > 11 && jupiter < 15, `jupiter ${jupiter}`);
+  // continuous at the transitions
+  assert.ok(Math.abs(radiusFromMass(2.0399) - radiusFromMass(2.0401)) < 0.01);
 });

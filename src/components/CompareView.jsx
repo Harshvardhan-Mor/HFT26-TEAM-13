@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import Label from './Label.jsx';
 import { useRef } from 'react';
-import { planetColor } from '../lib/visual.js';
+import PlanetBody from './PlanetBody.jsx';
 import { fmt } from '../lib/format.js';
 
 const EARTH = { pl_name: 'Earth', hab: { radius: { value: 1 }, eqTemp: { value: 255 } } };
@@ -14,11 +14,8 @@ function Body({ planet, x, r }) {
   useFrame((_, dt) => { ref.current.rotation.y += dt * 0.3; });
   return (
     <group position={[x, 0, 0]}>
-      <mesh ref={ref}>
-        <sphereGeometry args={[r, 48, 48]} />
-        <meshStandardMaterial color={planet === EARTH ? '#3b82c4' : planetColor(planet)} roughness={0.7} />
-      </mesh>
-      <Label position={[0, -r - 0.7, 0]} text={`${planet.pl_name}\n${fmt(planet.hab.radius.value, 2)} × Earth${planet.hab.radius.estimated ? ' (est.)' : ''}`} />
+      <group ref={ref}><PlanetBody planet={planet} radius={r} /></group>
+      <Label position={[0, -r - 0.9, 0]} text={`${planet.pl_name}\n${fmt(planet.hab.radius.value, 2)} × Earth${planet.hab.radius.estimated ? ' (est.)' : ''}`} />
     </group>
   );
 }

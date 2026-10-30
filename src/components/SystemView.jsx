@@ -6,7 +6,9 @@ import { OrbitControls, Stars, Line } from '@react-three/drei';
 import Label from './Label.jsx';
 import * as THREE from 'three';
 import { semiMajorAxis } from '../lib/habitability.js';
-import { orbitScale, planetSize, planetColor, starColor } from '../lib/visual.js';
+import { orbitScale, planetSize, starColor } from '../lib/visual.js';
+import PlanetBody, { StarGlow } from './PlanetBody.jsx';
+import CameraFlyIn from './CameraFlyIn.jsx';
 
 function ellipsePoints(a, e, n = 128) {
   const b = a * Math.sqrt(1 - e * e);
@@ -28,15 +30,12 @@ function Planet({ planet, a, e, simDays, selected, onSelect }) {
     // Uniform angular motion: a simplification of Kepler's second law, period is real.
     const t = phase + (planet.pl_orbper ? (simDays.current / planet.pl_orbper) * Math.PI * 2 : 0);
     ref.current.position.set(a * Math.cos(t) - c, 0, b * Math.sin(t));
-    ref.current.rotation.y += 0.01;
+    ref.current.rotation.y += 0.004;
   });
 
   return (
     <group ref={ref}>
-      <mesh onClick={(ev) => { ev.stopPropagation(); onSelect(planet.pl_name); }}>
-        <sphereGeometry args={[size, 32, 32]} />
-        <meshStandardMaterial color={planetColor(planet)} roughness={0.8} metalness={0.1} />
-      </mesh>
+      <PlanetBody planet={planet} radius={size} onClick={(ev) => { ev.stopPropagation(); onSelect(planet.pl_name); }} />
       {selected && (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <ringGeometry args={[size * 1.4, size * 1.6, 48]} />
@@ -82,10 +81,7 @@ function Scene({ system, selectedPlanet, onSelectPlanet, speed }) {
         <sphereGeometry args={[starSize, 48, 48]} />
         <meshBasicMaterial color={starColor(star.st_teff)} />
       </mesh>
-      <mesh>
-        <sphereGeometry args={[starSize * 1.25, 48, 48]} />
-        <meshBasicMaterial color={starColor(star.st_teff)} transparent opacity={0.15} />
-      </mesh>
+      <StarGlow color={starColor(star.st_teff)} size={starSize * 7} />
 
       {hz && (
         <>
@@ -115,7 +111,8 @@ export default function SystemView({ system, selectedPlanet, onSelectPlanet, spe
       <color attach="background" args={['#04060d']} />
       <Stars radius={150} depth={50} count={3000} factor={3} fade />
       <Scene system={system} selectedPlanet={selectedPlanet} onSelectPlanet={onSelectPlanet} speed={speed} />
-      <OrbitControls enableDamping makeDefault />
+      <OrbitControls enableDamping makeDefault maxDistance={140} minDistance={4} />
+      <CameraFlyIn trigger={system.hostname} from={[0, 70, 110]} to={[0, 26, 40]} />
     </Canvas>
   );
 }
