@@ -1,0 +1,38 @@
+{
+  "name": "exoplanet-explorer",
+  "version": "0.1.0",
+  "description": "Open-source interactive 3D explorer for NASA Exoplanet Archive data, with habitability indicators and an AI virtual astronomer.",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "fetch-data": "node scripts/fetch-nasa.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "exoplanets",
+    "nasa",
+    "threejs",
+    "react-three-fiber",
+    "astronomy",
+    "habitability",
+    "llm"
+  ],
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5"
+  }
+}

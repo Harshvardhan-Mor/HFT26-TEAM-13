@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+.DS_Store
+*.log
+
+# Secrets: never commit your real API key
+.env
+.env.local
+
+# Large generated data snapshot (re-create with `npm run fetch-data`).
+# Remove this line if you want to commit the snapshot so the app works without a download.
+# public/data/exoplanets.json
