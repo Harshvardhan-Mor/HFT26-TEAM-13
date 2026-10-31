@@ -49,6 +49,8 @@ An open-source, interactive 3D platform for exploring every confirmed exoplanet 
 
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
+**🔗 Live demo: https://hft-26-team-13.vercel.app**
+
 ## Features
 
 | | |
