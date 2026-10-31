@@ -58,8 +58,8 @@ export default function CompareView({ planets, onRemove, onAskAi }) {
         <Canvas camera={{ position: [0, 2, 14], fov: 45 }}>
           <color attach="background" args={['#04060d']} />
           <Stars radius={100} count={1500} factor={2} fade />
-          <ambientLight intensity={0.4} />
-          <directionalLight position={[5, 5, 8]} intensity={2} />
+          <ambientLight intensity={0.12} />
+          <directionalLight position={[-8, 4, 5]} intensity={3} color="#fff4e6" />
           {placed.map(({ b, r, pos }) => <Body key={b.pl_name} planet={b} x={pos - offset} r={r} />)}
           <OrbitControls enableDamping makeDefault />
           <Bloom strength={0.5} radius={0.4} threshold={0.75} />

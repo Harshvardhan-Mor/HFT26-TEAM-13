@@ -65,6 +65,11 @@ export default function App() {
     planets: data.planets.length,
     systems: data.systems.size,
     habitable: data.planets.filter((p) => p.hab.sample).length,
+    // Discoveries per year, for the intro's timeline: [[1992, 2], [1994, 1], ...]
+    byYear: Object.entries(data.planets.reduce((acc, p) => {
+      if (p.disc_year) acc[p.disc_year] = (acc[p.disc_year] ?? 0) + 1;
+      return acc;
+    }, {})).map(([y, n]) => [Number(y), n]).sort((a, b) => a[0] - b[0]),
   }, [data]);
 
   // Only tour stops whose planet exists in the loaded dataset.

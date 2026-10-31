@@ -1,23 +1,77 @@
-// A textured planet sphere with a thin atmosphere glow. Used by System and Compare views.
-import { useMemo } from 'react';
+// A planet: textured surface (bumps, shiny oceans, glowing lava), a drifting cloud
+// layer for temperate worlds, and a soft atmospheric rim lit from the viewing angle.
+// Used by the System, Compare and Intro views.
+import { useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { planetKind, planetTexture, ATMOSPHERE, glowTexture } from '../lib/textures.js';
+import { planetKind, planetMaps, ATMOSPHERE, glowTexture } from '../lib/textures.js';
 
-export default function PlanetBody({ planet, radius, onClick }) {
-  const kind = planetKind(planet);
-  const map = useMemo(() => planetTexture(planet.pl_name, kind), [planet.pl_name, kind]);
-  const atmo = ATMOSPHERE[kind];
+/** Fresnel rim: brightest where the surface turns away from the viewer, like a real atmosphere. */
+function AtmosphereMaterial({ color, power = 3.2, intensity = 1.1 }) {
+  const uniforms = useMemo(() => ({
+    uColor: { value: new THREE.Color(color) },
+    uPower: { value: power },
+    uIntensity: { value: intensity },
+  }), [color, power, intensity]);
   return (
-    <group>
-      <mesh onClick={onClick} rotation={[0.25, 0, 0]}>
-        <sphereGeometry args={[radius, 48, 48]} />
-        <meshStandardMaterial map={map} roughness={0.85} metalness={0.05}
-          emissive={kind === 'lava' ? '#ff4a10' : '#000000'} emissiveIntensity={kind === 'lava' ? 0.35 : 0} emissiveMap={kind === 'lava' ? map : null} />
+    <shaderMaterial
+      uniforms={uniforms}
+      transparent
+      depthWrite={false}
+      blending={THREE.AdditiveBlending}
+      side={THREE.FrontSide}
+      vertexShader={`
+        varying vec3 vNormal; varying vec3 vView;
+        void main() {
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          vNormal = normalize(normalMatrix * normal);
+          vView = normalize(-mv.xyz);
+          gl_Position = projectionMatrix * mv;
+        }`}
+      fragmentShader={`
+        uniform vec3 uColor; uniform float uPower; uniform float uIntensity;
+        varying vec3 vNormal; varying vec3 vView;
+        void main() {
+          float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), uPower);
+          gl_FragColor = vec4(uColor * rim * uIntensity, rim);
+        }`}
+    />
+  );
+}
+
+export default function PlanetBody({ planet, radius, onClick, segments = 64 }) {
+  const kind = planetKind(planet);
+  const maps = useMemo(() => planetMaps(planet.pl_name, kind), [planet.pl_name, kind]);
+  const atmo = ATMOSPHERE[kind];
+  const clouds = useRef();
+  useFrame((_, dt) => { if (clouds.current) clouds.current.rotation.y += dt * 0.02; });
+
+  return (
+    <group rotation={[0.41, 0, 0]}>{/* ~23° axial tilt */}
+      <mesh onClick={onClick}>
+        <sphereGeometry args={[radius, segments, segments / 2]} />
+        <meshStandardMaterial
+          map={maps.map}
+          bumpMap={maps.bumpMap}
+          bumpScale={maps.bumpMap ? radius * 0.04 : 0}
+          roughnessMap={maps.roughnessMap}
+          roughness={1}
+          metalness={0}
+          emissive={maps.emissiveMap ? '#ffffff' : '#000000'}
+          emissiveMap={maps.emissiveMap}
+          emissiveIntensity={maps.emissiveMap ? 1.6 : 0}
+        />
       </mesh>
+      {maps.clouds && (
+        <mesh ref={clouds} scale={1.012}>
+          <sphereGeometry args={[radius, segments, segments / 2]} />
+          <meshStandardMaterial map={maps.clouds} transparent depthWrite={false} roughness={1} />
+        </mesh>
+      )}
       {atmo && (
-        <mesh scale={1.06}>
-          <sphereGeometry args={[radius, 32, 32]} />
-          <meshBasicMaterial color={atmo} transparent opacity={0.12} side={THREE.BackSide} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <mesh scale={1.05}>
+          <sphereGeometry args={[radius, 48, 24]} />
+          <AtmosphereMaterial color={atmo} intensity={kind === 'lava' ? 1.4 : 1.1} />
         </mesh>
       )}
     </group>
