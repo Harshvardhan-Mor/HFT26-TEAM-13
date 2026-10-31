@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import { chatHandler } from './server/chat.js';
+import { chatHandler, chatStream } from './server/chat.js';
 import { nasaHandler } from './server/nasa.js';
 
 // In development, serve /api/* from the same handlers Vercel uses in production,
@@ -21,6 +21,7 @@ function localApi() {
         req.on('end', async () => {
           let body = {};
           try { body = JSON.parse(raw || '{}'); } catch { return send(res, { status: 400, body: { error: 'Invalid JSON' } }); }
+          if (body.stream) return chatStream(body, res);
           send(res, await chatHandler(body));
         });
       });

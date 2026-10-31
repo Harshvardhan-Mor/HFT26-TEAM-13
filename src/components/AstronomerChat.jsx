@@ -16,10 +16,14 @@ function Text({ text }) {
   ));
 }
 
-export default function AstronomerChat({ messages, loading, onSend, contextLabel }) {
+const LANGS = { en: 'English', hi: 'हिन्दी', te: 'తెలుగు' };
+
+export default function AstronomerChat({ messages, loading, onSend, onReset, language, setLanguage, contextLabel }) {
   const [input, setInput] = useState('');
   const end = useRef();
-  useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, loading]);
+  useEffect(() => { end.current?.scrollIntoView({ block: 'end' }); }, [messages, loading]);
+  const last = messages[messages.length - 1];
+  const thinking = loading && (!last || last.role !== 'assistant' || !last.content);
 
   const submit = (text) => {
     const t = (text ?? input).trim();
@@ -30,7 +34,13 @@ export default function AstronomerChat({ messages, loading, onSend, contextLabel
 
   return (
     <div className="chat">
-      <div className="chat-context">Talking about: <b>{contextLabel || 'nothing selected'}</b></div>
+      <div className="chat-context">
+        <span>Talking about: <b>{contextLabel || 'nothing selected'}</b></span>
+        <select value={language} onChange={(e) => setLanguage(e.target.value)} aria-label="Answer language">
+          {Object.entries(LANGS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+        </select>
+        {messages.length > 0 && <button className="small-btn" onClick={onReset}>New chat</button>}
+      </div>
       <div className="chat-log">
         {messages.length === 0 && (
           <div className="chat-intro">
@@ -40,10 +50,10 @@ export default function AstronomerChat({ messages, loading, onSend, contextLabel
             </div>
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={`msg ${m.role} ${m.error ? 'error' : ''}`}><Text text={m.content} /></div>
+        {messages.filter((m) => m.content).map((m, i) => (
+          <div key={i} className={`msg ${m.role} ${m.error ? 'error' : ''} ${m.streaming ? 'streaming' : ''}`}><Text text={m.content} /></div>
         ))}
-        {loading && <div className="msg assistant typing">Astra is thinking…</div>}
+        {thinking && <div className="msg assistant typing">Astra is thinking…</div>}
         <div ref={end} />
       </div>
       <form className="chat-input" onSubmit={(e) => { e.preventDefault(); submit(); }}>

@@ -11,6 +11,7 @@ import { LabelScale } from './components/Label.jsx';
 import { loadSnapshot, loadLive, planetContext } from './lib/data.js';
 import { NASA_ACKNOWLEDGEMENT } from './lib/nasa.js';
 import { TOUR_STOPS } from './lib/tour.js';
+import useAstra from './lib/useAstra.js';
 
 const VIEWS = { galaxy: '🌌 Galaxy', system: '🪐 System', compare: '⚖️ Compare' };
 const MOBILE_QUERY = '(max-width: 900px)';
@@ -42,8 +43,7 @@ export default function App() {
   const [habitableOnly, setHabitableOnly] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [panelTab, setPanelTab] = useState('details');
-  const [messages, setMessages] = useState([]);
-  const [chatLoading, setChatLoading] = useState(false);
+  const astra = useAstra();
 
   // UI chrome
   const isMobile = useIsMobile();
@@ -102,21 +102,17 @@ export default function App() {
     catch (e) { setStatus(`Live refresh failed (${e.message}). Still using the saved snapshot.`); }
   };
 
-  const sendChat = async (text, overrideContext) => {
+  // Astra: each question carries the selected planet's real data (see planetContext).
+  const sendChat = (text, overrideContext) => {
     const context = overrideContext ?? (planet ? { selected_planet: planetContext(planet), other_planets_in_system: system.planets.filter((p) => p !== planet).map((p) => planetContext(p)) } : null);
-    const next = [...messages, { role: 'user', content: text }];
-    setMessages(next);
     setPanelTab('chat');
     setRightOpen(true);
-    setChatLoading(true);
-    try {
-      const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: next.filter((m) => !m.error), context }) });
-      const json = await res.json();
-      setMessages([...next, json.reply ? { role: 'assistant', content: json.reply } : { role: 'assistant', content: `⚠️ ${json.error || 'Something went wrong.'}`, error: true }]);
-    } catch (e) {
-      setMessages([...next, { role: 'assistant', content: `⚠️ Could not reach the AI server: ${e.message}`, error: true }]);
-    } finally { setChatLoading(false); }
+    astra.send(text, context);
   };
+
+  // Fresh conversation whenever the user switches to a different planet.
+  const { reset: resetChat } = astra;
+  useEffect(() => { resetChat(); }, [planet?.pl_name, resetChat]);
 
   const askCompare = () => sendChat(
     `Compare ${comparePlanets.map((p) => p.pl_name).join(', ')} with each other and with Earth. Which is most Earth-like and why? Mention key uncertainties.`,
@@ -197,7 +193,7 @@ export default function App() {
               </div>
               {panelTab === 'details'
                 ? <PlanetPanel system={system} planet={planet} onSelectPlanet={setPlanetName} onCompare={(p) => setCompare([...compare, p.pl_name])} compareNames={compare} onAsk={sendChat} />
-                : <AstronomerChat messages={messages} loading={chatLoading} onSend={(t) => sendChat(t)} contextLabel={planet?.pl_name} />}
+                : <AstronomerChat messages={astra.messages} loading={astra.loading} onSend={(t) => sendChat(t)} onReset={astra.reset} language={astra.language} setLanguage={astra.setLanguage} contextLabel={planet?.pl_name} />}
             </aside>
           </div>
         </main>
