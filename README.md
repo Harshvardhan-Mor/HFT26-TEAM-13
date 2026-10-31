@@ -58,7 +58,13 @@ An open-source, interactive 3D platform for exploring every confirmed exoplanet 
 | ⚖️ **Compare** | Up to 3 planets next to Earth at true relative size, with a side-by-side property table. |
 | 🌱 **Habitability dashboard** | Earth Similarity Index, habitable-zone position, size class, temperature, orbit shape and star type, each showing *how* it is calculated. |
 | ✨ **Astra, the AI astronomer** | Explains and compares planets using the selected planet's real data, so answers are grounded in the archive instead of made up. |
-| 🛰️ **Real NASA data** | `pscomppars` table via the archive's TAP API. Saved as an offline snapshot, with a "Live NASA" refresh button. |
+| 🛰️ **Real NASA data** | `pscomppars` table via the archive's TAP API. Saved as an offline snapshot, with a **↻ Live** button to refresh from NASA. |
+| 🎬 **Scroll-story intro and guided tour** | A welcome story with a 3D planet that moves as you scroll, a discovery counter from 1992 to today, and a step-by-step tour of famous worlds. |
+| ⏳ **Discovery timeline** | Press ▶ in the Galaxy view to replay 30+ years of discoveries, year by year. |
+| 🎥 **Follow-cam and visuals** | Click a planet to fly to it and ride along its orbit. Glowing stars, orbit trails and detailed planet surfaces (artistic impressions). |
+| 🔎 **Filters and travel time** | Filter by discovery method and planet size, and see how long a trip there would take. |
+| 🗣️ **Three languages** | Astra answers in English, Hindi or Telugu. |
+| 🖥️ **Presenter mode** | Large text and controls for projectors and classrooms. |
 
 ## Quick start
 
@@ -75,7 +81,7 @@ npm run dev                 # open http://localhost:5173
 
 On Windows PowerShell, use `copy .env.example .env` instead of `cp`.
 
-Without `npm run fetch-data`, the app runs on a small **offline sample** of 15 well-known planets (labelled "Offline sample data" in the header). Without an API key, everything works except the AI chat.
+Without `npm run fetch-data`, the app runs on a small **offline sample** of 15 well-known planets (labelled "Offline sample" in the header). Without an API key, everything works except the AI chat.
 
 ```bash
 npm test        # checks the habitability science against known values
