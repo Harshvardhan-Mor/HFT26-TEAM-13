@@ -201,3 +201,78 @@ footer { padding: 6px 16px; border-top: 1px solid var(--line); background: var(-
   .intro-stats b { font-size: 24px; }
   .presenter .sidebar, .presenter .panel, .presenter .legend, .presenter .tour-card, .presenter .compare-table { zoom: 1; }
 }
+/* ===== M: Sidebar filter improvements ===== */
+
+.sidebar .filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.sidebar .filters select {
+  width: 100%;
+  min-width: 0;
+}
+
+.sidebar .toggle {
+  width: 100%;
+}
+
+.clear-filters {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #33466f;
+  border-radius: 8px;
+  background: #131d35;
+  color: #dce6ff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.clear-filters:hover {
+  background: #1d2b4d;
+  border-color: #648cff;
+}
+/* ===== M: Travel time card ===== */
+
+.travel-card {
+  margin-top: 16px;
+  padding: 16px;
+  background: #111a30;
+  border: 1px solid #293858;
+  border-radius: 14px;
+}
+
+.travel-card h3 {
+  margin: 0 0 12px;
+}
+
+.travel-distance {
+  margin: 0 0 14px;
+  color: #aebbd3;
+}
+
+.travel-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.travel-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  background: #0b1325;
+  border-radius: 8px;
+}
+
+.travel-option span {
+  color: #b8c4da;
+}
+
+.travel-option strong {
+  text-align: right;
+  white-space: nowrap;
+}

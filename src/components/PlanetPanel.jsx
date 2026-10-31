@@ -1,5 +1,6 @@
 // Right panel: properties of the selected planet + its habitability dashboard.
 import HabitabilityCard from './HabitabilityCard.jsx';
+import TravelCard from './TravelCard.jsx';
 import { fmt } from '../lib/format.js';
 import { semiMajorAxis } from '../lib/habitability.js';
 
@@ -54,6 +55,7 @@ export default function PlanetPanel({ system, planet, onSelectPlanet, onCompare,
       </section>
 
       <HabitabilityCard planet={p} />
+       <TravelCard distancePc={p.sy_dist} />
     </div>
   );
 }
