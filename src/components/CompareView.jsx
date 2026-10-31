@@ -5,6 +5,8 @@ import { OrbitControls, Stars } from '@react-three/drei';
 import Label from './Label.jsx';
 import { useRef } from 'react';
 import PlanetBody from './PlanetBody.jsx';
+import Bloom from './Bloom.jsx';
+import './graphics.css';
 import { fmt } from '../lib/format.js';
 
 const EARTH = { pl_name: 'Earth', hab: { radius: { value: 1 }, eqTemp: { value: 255 } } };
@@ -51,7 +53,7 @@ export default function CompareView({ planets, onRemove, onAskAi }) {
   }
 
   return (
-    <div className="compare">
+    <div className="compare fade-in">
       <div className="compare-canvas">
         <Canvas camera={{ position: [0, 2, 14], fov: 45 }}>
           <color attach="background" args={['#04060d']} />
@@ -60,6 +62,7 @@ export default function CompareView({ planets, onRemove, onAskAi }) {
           <directionalLight position={[5, 5, 8]} intensity={2} />
           {placed.map(({ b, r, pos }) => <Body key={b.pl_name} planet={b} x={pos - offset} r={r} />)}
           <OrbitControls enableDamping makeDefault />
+          <Bloom strength={0.5} radius={0.4} threshold={0.75} />
         </Canvas>
         <p className="hint">Sizes are to scale relative to each other.</p>
       </div>

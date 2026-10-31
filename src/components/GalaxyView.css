@@ -1,0 +1,12 @@
+/* Galaxy view: timeline overlay (owned by the 3D area, separate from styles.css to avoid conflicts) */
+.galaxy-wrap { position: absolute; inset: 0; }
+.timeline { position: absolute; top: 12px; left: 12px; right: 12px; z-index: 5; max-width: 560px; display: flex; align-items: center; gap: 10px;
+  background: rgba(8, 12, 24, 0.75); backdrop-filter: blur(8px); border: 1px solid rgba(124, 156, 255, 0.16); border-radius: 12px; padding: 8px 12px; }
+.timeline .tl-play { width: 36px; height: 36px; border-radius: 50%; padding: 0; font-size: 14px; flex: none; }
+.timeline .tl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.timeline .tl-text { font-size: 12px; color: #8b95ab; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timeline .tl-text b { color: #e8edf7; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; }
+.timeline .tl-gold { color: #ffd36b; }
+.timeline input[type='range'] { width: 100%; accent-color: #7c9cff; }
+.timeline .tl-all { font-size: 12px; padding: 4px 8px; flex: none; }
+@media (max-width: 900px) { .timeline { top: 8px; left: 8px; right: 8px; } }

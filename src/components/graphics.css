@@ -1,0 +1,14 @@
+/* 3D scene polish (owned by the 3D area, kept out of styles.css to avoid conflicts) */
+.scene-wrap { position: absolute; inset: 0; }
+.fade-in { animation: scene-fade 0.7s ease both; }
+@keyframes scene-fade { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } }
+
+.follow-chip {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 5;
+  font-size: 12px; color: #c7d0e6; white-space: nowrap; max-width: calc(100% - 24px); overflow: hidden; text-overflow: ellipsis;
+  background: rgba(8, 12, 24, 0.75); backdrop-filter: blur(8px);
+  border: 1px solid rgba(124, 156, 255, 0.35); border-radius: 99px; padding: 6px 14px;
+  animation: scene-fade 0.4s ease both;
+}
+.follow-chip b { color: #fff; }
